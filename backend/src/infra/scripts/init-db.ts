@@ -7,9 +7,9 @@ async function initializeDatabase() {
     const pool = await getPool();
     const connection = await pool.getConnection();
 
-    console.log('Creating registros table...');
+    console.log('Creating registrations table...');
     await connection.execute(`
-      CREATE TABLE IF NOT EXISTS registros (
+      CREATE TABLE IF NOT EXISTS registrations (
         id INT AUTO_INCREMENT PRIMARY KEY,
         fullName VARCHAR(255) NOT NULL,
         phone VARCHAR(20) NOT NULL,
@@ -27,7 +27,7 @@ async function initializeDatabase() {
         INDEX idx_createdAt (createdAt)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
-    console.log('✓ registros table created/verified');
+    console.log('✓ registrations table created/verified');
 
     console.log('Creating municipalities table...');
     await connection.execute(`
@@ -40,9 +40,9 @@ async function initializeDatabase() {
     `);
     console.log('✓ municipalities table created/verified');
 
-    console.log('Seeding municipios...');
+    console.log('Seeding municipalities...');
     await insertMunicipios(connection);
-    console.log('✓ municipios seeded');
+    console.log('✓ municipalities seeded');
 
     connection.release();
     await closePool();

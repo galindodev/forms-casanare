@@ -28,7 +28,7 @@ npm run dev
 
 ## API Endpoints
 
-### POST /api/registros
+### POST /api/registrations
 Crear nuevo registro. Requiere Bearer token.
 
 **Headers:**
@@ -54,7 +54,7 @@ Content-Type: application/json
 }
 ```
 
-### GET /api/registros/excel
+### GET /api/registrations/excel
 Descargar registros en Excel. Requiere Bearer token.
 
 **Headers:**

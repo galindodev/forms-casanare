@@ -9,7 +9,7 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
 
     try {
       const [result] = await connection.execute(
-        `INSERT INTO registros (
+        `INSERT INTO registrations (
           fullName, phone, identificationType, identificationNumber,
           email, address, ageGroup, department,
           municipality, gender, acceptedTerms
@@ -40,7 +40,7 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
     const connection = await pool.getConnection();
 
     try {
-      const [rows] = await connection.execute('SELECT * FROM registros');
+      const [rows] = await connection.execute('SELECT * FROM registrations');
       return (rows as any[]).map((row) => ({
         id: row.id,
         fullName: row.fullName,
@@ -66,7 +66,7 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
     const connection = await pool.getConnection();
 
     try {
-      await connection.execute('DELETE FROM registros');
+      await connection.execute('DELETE FROM registrations');
     } finally {
       connection.release();
     }

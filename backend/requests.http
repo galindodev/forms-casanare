@@ -6,7 +6,7 @@
 GET {{baseUrl}}/health
 
 ### Create registro (requires valid JWT token)
-POST {{baseUrl}}/api/registros
+POST {{baseUrl}}/api/registrations
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -25,5 +25,5 @@ Content-Type: application/json
 }
 
 ### Get registros as Excel
-GET {{baseUrl}}/api/registros/excel
+GET {{baseUrl}}/api/registrations/excel
 Authorization: Bearer {{token}}

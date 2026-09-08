@@ -19,12 +19,12 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'OK' });
 });
 
-app.post('/api/registros', verifyBearerToken, (req, res) => {
-  registroController.crearRegistro(req, res);
+app.post('/api/registrations', verifyBearerToken, (req, res) => {
+  registroController.createRegistration(req, res);
 });
 
-app.get('/api/registros/excel', verifyBearerToken, (req, res) => {
-  registroController.obtenerRegistrosExcel(req, res);
+app.get('/api/registrations/excel', verifyBearerToken, (req, res) => {
+  registroController.getRegistrationsExcel(req, res);
 });
 
 app.use((req: Request, res: Response) => {

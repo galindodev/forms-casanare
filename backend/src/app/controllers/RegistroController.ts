@@ -6,31 +6,31 @@ import ExcelJS from 'exceljs';
 export class RegistroController {
   constructor(private service: RegistroService) {}
 
-  async crearRegistro(req: Request, res: Response): Promise<void> {
+  async createRegistration(req: Request, res: Response): Promise<void> {
     try {
       const data: Registro = req.body;
-      const id = await this.service.crearRegistro(data);
+      const id = await this.service.createRegistration(data);
       res.status(201).json({
         success: true,
-        message: 'Registro creado exitosamente',
+        message: 'Registration created successfully',
         id,
       });
     } catch (error: any) {
       res.status(400).json({
         success: false,
-        error: error.message || 'Error al crear registro',
+        error: error.message || 'Error creating registration',
       });
     }
   }
 
-  async obtenerRegistrosExcel(req: Request, res: Response): Promise<void> {
+  async getRegistrationsExcel(req: Request, res: Response): Promise<void> {
     try {
-      const registros = await this.service.obtenerRegistros();
+      const registrations = await this.service.getRegistrations();
 
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Registros');
 
-      const mappedData = registros.map((r) => ({
+      const mappedData = registrations.map((r) => ({
         'ID': r.id,
         'Nombres Completos': r.fullName,
         'Celular': r.phone,
@@ -77,7 +77,7 @@ export class RegistroController {
       );
       res.setHeader(
         'Content-Disposition',
-        `attachment; filename="registros_${new Date().toISOString().split('T')[0]}.xlsx"`
+        `attachment; filename="registrations_${new Date().toISOString().split('T')[0]}.xlsx"`
       );
 
       await workbook.xlsx.write(res);
@@ -85,7 +85,7 @@ export class RegistroController {
     } catch (error: any) {
       res.status(500).json({
         success: false,
-        error: error.message || 'Error al generar archivo Excel',
+        error: error.message || 'Error generating Excel file',
       });
     }
   }

@@ -4,16 +4,16 @@ import { Registro } from '../../domain/entities/Registro';
 export class RegistroService {
   constructor(private repository: IRegistroRepository) {}
 
-  async crearRegistro(data: Registro): Promise<number> {
-    this.validarRegistro(data);
+  async createRegistration(data: Registro): Promise<number> {
+    this.validateRegistration(data);
     return this.repository.save(data);
   }
 
-  async obtenerRegistros(): Promise<Registro[]> {
+  async getRegistrations(): Promise<Registro[]> {
     return this.repository.findAll();
   }
 
-  private validarRegistro(data: Registro): void {
+  private validateRegistration(data: Registro): void {
     if (!data.fullName || data.fullName.trim().length === 0) {
       throw new Error('Full name required');
     }
