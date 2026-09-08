@@ -1,0 +1,29 @@
+### Variables
+@baseUrl = http://localhost:3000
+@token = YOUR_JWT_TOKEN_HERE
+
+### Health check
+GET {{baseUrl}}/health
+
+### Create registro (requires valid JWT token)
+POST {{baseUrl}}/api/registros
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombresCompletos": "Juan Pérez García",
+  "celular": "+573001234567",
+  "tipoIdentificacion": "Cédula de Ciudadanía",
+  "numeroIdentificacion": "123456789",
+  "correoElectronico": "juan@example.com",
+  "direccionCompleta": "Calle 1 #2-3, Barrio Centro",
+  "grupoEdad": "25-35",
+  "departamento": "Casanare",
+  "municipio": "Yopal",
+  "genero": "Hombre",
+  "aceptoTerminos": true
+}
+
+### Get registros as Excel
+GET {{baseUrl}}/api/registros/excel
+Authorization: Bearer {{token}}
