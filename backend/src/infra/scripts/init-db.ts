@@ -29,16 +29,16 @@ async function initializeDatabase() {
     `);
     console.log('✓ registros table created/verified');
 
-    console.log('Creating municipios table...');
+    console.log('Creating municipalities table...');
     await connection.execute(`
-      CREATE TABLE IF NOT EXISTS municipios (
+      CREATE TABLE IF NOT EXISTS municipalities (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        nombre VARCHAR(100) NOT NULL UNIQUE,
-        departamento VARCHAR(100) NOT NULL DEFAULT 'Casanare',
+        name VARCHAR(100) NOT NULL UNIQUE,
+        department VARCHAR(100) NOT NULL DEFAULT 'Casanare',
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
-    console.log('✓ municipios table created/verified');
+    console.log('✓ municipalities table created/verified');
 
     console.log('Seeding municipios...');
     await insertMunicipios(connection);

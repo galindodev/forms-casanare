@@ -27,7 +27,7 @@ export async function insertMunicipios(connection: Connection): Promise<void> {
     for (const municipio of MUNICIPIOS_CASANARE) {
       try {
         await connection.execute(
-          'INSERT IGNORE INTO municipios (nombre, departamento) VALUES (?, ?)',
+          'INSERT IGNORE INTO municipalities (name, department) VALUES (?, ?)',
           [municipio, 'Casanare']
         );
       } catch (error: any) {
@@ -37,7 +37,7 @@ export async function insertMunicipios(connection: Connection): Promise<void> {
       }
     }
   } catch (error) {
-    console.error('Error inserting municipios:', error);
+    console.error('Error inserting municipalities:', error);
     throw error;
   }
 }
