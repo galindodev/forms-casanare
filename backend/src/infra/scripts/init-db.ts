@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { getPool, closePool } from '../mysql/connection';
 import { insertMunicipios } from './municipios-seed';
 
@@ -10,20 +11,20 @@ async function initializeDatabase() {
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS registros (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        nombresCompletos VARCHAR(255) NOT NULL,
-        celular VARCHAR(20) NOT NULL,
-        tipoIdentificacion VARCHAR(50) NOT NULL,
-        numeroIdentificacion VARCHAR(50) NOT NULL UNIQUE,
-        correoElectronico VARCHAR(255) NOT NULL,
-        direccionCompleta TEXT NOT NULL,
-        grupoEdad VARCHAR(50) NOT NULL,
-        departamento VARCHAR(100) NOT NULL,
-        municipio VARCHAR(100) NOT NULL,
-        genero ENUM('Hombre', 'Mujer') NOT NULL,
-        aceptoTerminos BOOLEAN NOT NULL,
-        fechaRegistro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_municipio (municipio),
-        INDEX idx_fechaRegistro (fechaRegistro)
+        fullName VARCHAR(255) NOT NULL,
+        phone VARCHAR(20) NOT NULL,
+        identificationType VARCHAR(50) NOT NULL,
+        identificationNumber VARCHAR(50) NOT NULL UNIQUE,
+        email VARCHAR(255) NOT NULL,
+        address TEXT NOT NULL,
+        ageGroup VARCHAR(50) NOT NULL,
+        department VARCHAR(100) NOT NULL,
+        municipality VARCHAR(100) NOT NULL,
+        gender ENUM('Male', 'Female') NOT NULL,
+        acceptedTerms BOOLEAN NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_municipality (municipality),
+        INDEX idx_createdAt (createdAt)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
     console.log('✓ registros table created/verified');

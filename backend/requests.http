@@ -11,17 +11,17 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "nombresCompletos": "Juan Pérez García",
-  "celular": "+573001234567",
-  "tipoIdentificacion": "Cédula de Ciudadanía",
-  "numeroIdentificacion": "123456789",
-  "correoElectronico": "juan@example.com",
-  "direccionCompleta": "Calle 1 #2-3, Barrio Centro",
-  "grupoEdad": "25-35",
-  "departamento": "Casanare",
-  "municipio": "Yopal",
-  "genero": "Hombre",
-  "aceptoTerminos": true
+  "fullName": "Juan Pérez García",
+  "phone": "+573001234567",
+  "identificationType": "Cédula de Ciudadanía",
+  "identificationNumber": "123456789",
+  "email": "juan@example.com",
+  "address": "Calle 1 #2-3, Barrio Centro",
+  "ageGroup": "25-35",
+  "department": "Casanare",
+  "municipality": "Yopal",
+  "gender": "Male",
+  "acceptedTerms": true
 }
 
 ### Get registros as Excel

@@ -40,17 +40,17 @@ Content-Type: application/json
 **Body:**
 ```json
 {
-  "nombresCompletos": "Juan Pérez",
-  "celular": "+573001234567",
-  "tipoIdentificacion": "Cédula de Ciudadanía",
-  "numeroIdentificacion": "123456789",
-  "correoElectronico": "juan@example.com",
-  "direccionCompleta": "Calle 1 #2-3",
-  "grupoEdad": "25-35",
-  "departamento": "Casanare",
-  "municipio": "Yopal",
-  "genero": "Hombre",
-  "aceptoTerminos": true
+  "fullName": "Juan Pérez",
+  "phone": "+573001234567",
+  "identificationType": "Cédula de Ciudadanía",
+  "identificationNumber": "123456789",
+  "email": "juan@example.com",
+  "address": "Calle 1 #2-3",
+  "ageGroup": "25-35",
+  "department": "Casanare",
+  "municipality": "Yopal",
+  "gender": "Male",
+  "acceptedTerms": true
 }
 ```
 

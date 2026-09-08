@@ -10,22 +10,22 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
     try {
       const [result] = await connection.execute(
         `INSERT INTO registros (
-          nombresCompletos, celular, tipoIdentificacion, numeroIdentificacion,
-          correoElectronico, direccionCompleta, grupoEdad, departamento,
-          municipio, genero, aceptoTerminos
+          fullName, phone, identificationType, identificationNumber,
+          email, address, ageGroup, department,
+          municipality, gender, acceptedTerms
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          registro.nombresCompletos,
-          registro.celular,
-          registro.tipoIdentificacion,
-          registro.numeroIdentificacion,
-          registro.correoElectronico,
-          registro.direccionCompleta,
-          registro.grupoEdad,
-          registro.departamento,
-          registro.municipio,
-          registro.genero,
-          registro.aceptoTerminos ? 1 : 0,
+          registro.fullName,
+          registro.phone,
+          registro.identificationType,
+          registro.identificationNumber,
+          registro.email,
+          registro.address,
+          registro.ageGroup,
+          registro.department,
+          registro.municipality,
+          registro.gender,
+          registro.acceptedTerms ? 1 : 0,
         ]
       );
 
@@ -43,18 +43,18 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
       const [rows] = await connection.execute('SELECT * FROM registros');
       return (rows as any[]).map((row) => ({
         id: row.id,
-        nombresCompletos: row.nombresCompletos,
-        celular: row.celular,
-        tipoIdentificacion: row.tipoIdentificacion,
-        numeroIdentificacion: row.numeroIdentificacion,
-        correoElectronico: row.correoElectronico,
-        direccionCompleta: row.direccionCompleta,
-        grupoEdad: row.grupoEdad,
-        departamento: row.departamento,
-        municipio: row.municipio,
-        genero: row.genero,
-        aceptoTerminos: row.aceptoTerminos === 1,
-        fechaRegistro: row.fechaRegistro,
+        fullName: row.fullName,
+        phone: row.phone,
+        identificationType: row.identificationType,
+        identificationNumber: row.identificationNumber,
+        email: row.email,
+        address: row.address,
+        ageGroup: row.ageGroup,
+        department: row.department,
+        municipality: row.municipality,
+        gender: row.gender,
+        acceptedTerms: row.acceptedTerms === 1,
+        createdAt: row.createdAt,
       }));
     } finally {
       connection.release();

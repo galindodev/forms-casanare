@@ -1,15 +1,15 @@
 export interface Registro {
   id?: number;
-  nombresCompletos: string;
-  celular: string;
-  tipoIdentificacion: string;
-  numeroIdentificacion: string;
-  correoElectronico: string;
-  direccionCompleta: string;
-  grupoEdad: string;
-  departamento: string;
-  municipio: string;
-  genero: 'Hombre' | 'Mujer';
-  aceptoTerminos: boolean;
-  fechaRegistro?: Date;
+  fullName: string;
+  phone: string;
+  identificationType: string;
+  identificationNumber: string;
+  email: string;
+  address: string;
+  ageGroup: string;
+  department: string;
+  municipality: string;
+  gender: 'Male' | 'Female';
+  acceptedTerms: boolean;
+  createdAt?: Date;
 }

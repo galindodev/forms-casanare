@@ -14,23 +14,23 @@ export class RegistroService {
   }
 
   private validarRegistro(data: Registro): void {
-    if (!data.nombresCompletos || data.nombresCompletos.trim().length === 0) {
-      throw new Error('Nombres completos requeridos');
+    if (!data.fullName || data.fullName.trim().length === 0) {
+      throw new Error('Full name required');
     }
-    if (!data.celular || data.celular.trim().length === 0) {
-      throw new Error('Celular requerido');
+    if (!data.phone || data.phone.trim().length === 0) {
+      throw new Error('Phone required');
     }
-    if (!data.correoElectronico || data.correoElectronico.trim().length === 0) {
-      throw new Error('Correo electrónico requerido');
+    if (!data.email || data.email.trim().length === 0) {
+      throw new Error('Email required');
     }
-    if (!data.numeroIdentificacion || data.numeroIdentificacion.trim().length === 0) {
-      throw new Error('Número de identificación requerido');
+    if (!data.identificationNumber || data.identificationNumber.trim().length === 0) {
+      throw new Error('Identification number required');
     }
-    if (!data.municipio || data.municipio.trim().length === 0) {
-      throw new Error('Municipio requerido');
+    if (!data.municipality || data.municipality.trim().length === 0) {
+      throw new Error('Municipality required');
     }
-    if (!data.aceptoTerminos) {
-      throw new Error('Debe aceptar términos y condiciones');
+    if (!data.acceptedTerms) {
+      throw new Error('Must accept terms and conditions');
     }
   }
 }
