@@ -6,7 +6,22 @@ export class RegistroService {
 
   async createRegistration(data: Registro): Promise<number> {
     this.validateRegistration(data);
-    return this.repository.save(data);
+    try {
+      return await this.repository.save(data);
+    } catch (error: any) {
+      if (error.code === 'ER_DUP_ENTRY') {
+        if (error.message.includes('email')) {
+          throw new Error('Email already registered');
+        }
+        if (error.message.includes('phone')) {
+          throw new Error('Phone already registered');
+        }
+        if (error.message.includes('identificationNumber')) {
+          throw new Error('Identification number already registered');
+        }
+      }
+      throw error;
+    }
   }
 
   async getRegistrations(): Promise<Registro[]> {

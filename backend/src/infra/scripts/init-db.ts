@@ -12,10 +12,10 @@ async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS registrations (
         id INT AUTO_INCREMENT PRIMARY KEY,
         fullName VARCHAR(255) NOT NULL,
-        phone VARCHAR(20) NOT NULL,
+        phone VARCHAR(20) NOT NULL UNIQUE,
         identificationType VARCHAR(50) NOT NULL,
         identificationNumber VARCHAR(50) NOT NULL UNIQUE,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
         address TEXT NOT NULL,
         ageGroup VARCHAR(50) NOT NULL,
         department VARCHAR(100) NOT NULL,
