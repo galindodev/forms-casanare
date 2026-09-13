@@ -43,12 +43,5 @@ plugins:
 custom:
   serverless-offline:
     httpPort: 3000
-
-resources:
-  Resources:
-    ServerlessDeploymentBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: defensores-casanare-deployment
  
   
