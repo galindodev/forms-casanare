@@ -19,10 +19,7 @@ provider:
     NODE_ENV: production
 
 package:
-  individually: true
-  patterns:
-    - '!node_modules/**'
-    - '!.env*'
+  individually: false
 
 functions:
   api:
