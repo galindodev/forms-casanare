@@ -39,7 +39,6 @@ functions:
 plugins:
   # - serverless-offline
   - serverless-plugin-tracing
-  - serverless-create-bucket
 
 custom:
   serverless-offline:
