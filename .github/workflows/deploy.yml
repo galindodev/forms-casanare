@@ -40,6 +40,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Clean up failed CloudFormation stack
+        run: |
+          # Delete failed stack if it exists
+          aws cloudformation delete-stack --stack-name defensores-casanare-api-dev --region us-east-1 2>/dev/null || true
+          # Wait for deletion to complete
+          aws cloudformation wait stack-delete-complete --stack-name defensores-casanare-api-dev --region us-east-1 2>/dev/null || true
+        continue-on-error: true
+
       - name: Deploy to Lambda
         working-directory: backend
         run: npm run deploy
