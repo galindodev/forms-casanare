@@ -10,7 +10,7 @@
     "db:init": "ts-node src/infra/scripts/init-db.ts",
     "db:test": "node scripts/test-connection.js",
     "typecheck": "tsc --noEmit",
-    "deploy": "npm run build && serverless deploy",
+    "deploy": "npm run build && serverless deploy --stage dev",
     "deploy:dev": "npm run build && serverless deploy --stage dev",
     "deploy:prod": "npm run build && serverless deploy --stage prod"
   },
