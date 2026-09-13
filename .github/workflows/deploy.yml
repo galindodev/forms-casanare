@@ -42,12 +42,15 @@ jobs:
 
       - name: Deploy to Lambda
         working-directory: backend
-        run: |
-          # TODO: Configurar serverless framework o AWS CDK
-          # Por ahora, deploy manual via console
-          echo "Deploy to Lambda configured"
-          # npm run deploy (cuando configure serverless framework)
+        run: npm run deploy
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Deployment notification
         if: success()
-        run: echo "✓ Backend deployed successfully"
+        run: echo "✓ Backend deployed successfully to Lambda"

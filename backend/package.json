@@ -9,7 +9,10 @@
     "start": "node dist/index.js",
     "db:init": "ts-node src/infra/scripts/init-db.ts",
     "db:test": "node scripts/test-connection.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy": "npm run build && serverless deploy",
+    "deploy:dev": "npm run build && serverless deploy --stage dev",
+    "deploy:prod": "npm run build && serverless deploy --stage prod"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
@@ -27,6 +30,9 @@
     "@types/node": "^20.0.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "serverless": "^3.0.0",
+    "serverless-offline": "^12.0.0",
+    "serverless-plugin-tracing": "^2.0.0",
     "ts-node": "^10.0.0",
     "typescript": "^5.0.0"
   }
