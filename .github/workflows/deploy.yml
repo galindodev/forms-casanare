@@ -40,12 +40,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Clean up failed CloudFormation stack
+      - name: Wait for CloudFormation stack to be ready
         run: |
-          # Delete failed stack if it exists
-          aws cloudformation delete-stack --stack-name defensores-casanare-api-dev --region us-east-1 2>/dev/null || true
-          # Wait for deletion to complete
-          aws cloudformation wait stack-delete-complete --stack-name defensores-casanare-api-dev --region us-east-1 2>/dev/null || true
+          # Wait for stack to be in a valid state (exists and not in DELETE_IN_PROGRESS)
+          for i in {1..30}; do
+            STATUS=$(aws cloudformation describe-stacks --stack-name defensores-casanare-api-dev --region us-east-1 --query 'Stacks[0].StackStatus' --output text 2>/dev/null || echo "DOES_NOT_EXIST")
+            if [[ "$STATUS" == "DOES_NOT_EXIST" || "$STATUS" == "CREATE_COMPLETE" || "$STATUS" == "UPDATE_COMPLETE" ]]; then
+              echo "Stack is ready (status: $STATUS)"
+              break
+            fi
+            echo "Waiting... (status: $STATUS)"
+            sleep 2
+          done
         continue-on-error: true
 
       - name: Deploy to Lambda
