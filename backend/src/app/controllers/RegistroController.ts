@@ -13,10 +13,15 @@ export class RegistroController {
   async getAllRegistrations(req: Request, res: Response): Promise<void> {
     try {
       const registrations = await this.service.getRegistrations();
+      const simplified = registrations.map(r => ({
+        id: r.id,
+        fullName: r.fullName,
+        email: r.email,
+      }));
       res.json({
         success: true,
-        data: registrations,
-        count: registrations.length,
+        data: simplified,
+        count: simplified.length,
       });
     } catch (error: any) {
       res.status(500).json({

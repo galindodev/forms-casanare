@@ -12,5 +12,6 @@ export interface Registro {
   municipality: string;
   gender: 'Male' | 'Female';
   acceptedTerms: boolean;
+  referredById?: string;
   createdAt?: Date;
 }

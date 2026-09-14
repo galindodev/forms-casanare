@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsEnum, IsBoolean, IsNumberString, MinLength, Matches } from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsBoolean, IsNumberString, IsOptional, MinLength, Matches } from 'class-validator';
 
 export class CreateRegistroDTO {
   @IsString()
@@ -40,4 +40,8 @@ export class CreateRegistroDTO {
 
   @IsBoolean()
   acceptedTerms!: boolean;
+
+  @IsOptional()
+  @IsString()
+  referredById?: string;
 }

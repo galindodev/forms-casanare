@@ -60,6 +60,7 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
         municipality: item.municipality,
         gender: item.gender,
         acceptedTerms: item.acceptedTerms === 1,
+        referredById: item.referredById,
         createdAt: item.createdAt ? new Date(item.createdAt) : undefined,
       }));
     } catch (error) {
