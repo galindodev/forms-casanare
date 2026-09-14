@@ -63,13 +63,14 @@ jobs:
             npm run deploy:dev
           fi
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DYNAMODB_TABLE_NAME: ${{ secrets.DYNAMODB_TABLE_NAME || 'registrations' }}
+          AWS_REGION: us-east-1
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN || '*' }}
 
       - name: Deployment notification
         if: success()
-        run: echo "✓ Backend deployed successfully to Lambda"
+        run: |
+          echo "✓ Backend deployed successfully to Lambda"
+          echo "  - Database: DynamoDB (auto-initialized on startup)"
+          echo "  - Endpoints: GET, POST, DELETE /api/registrations"
+          echo "  - Docs: https://api.example.com/api-docs"
