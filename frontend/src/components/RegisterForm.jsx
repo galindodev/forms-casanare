@@ -35,12 +35,24 @@ export default function RegisterForm({ isDark }) {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [touched, setTouched] = useState({})
+  const [referralUrl, setReferralUrl] = useState('')
+  const [copied, setCopied] = useState(false)
 
   const municipalities = [
     'Yopal', 'Aguazul', 'Tauramena', 'Villanueva', 'Monterrey', 'Paz de Ariporo',
     'Maní', 'Orocué', 'Pore', 'Chámeza', 'Hato Corozal', 'La Salina', 'Nunchía',
     'Recetor', 'Sabanalarga', 'Sácama', 'San Luis de Palenque', 'Támara', 'Trinidad'
   ]
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Error copying:', err)
+    }
+  }
 
   const validateField = (name, value) => {
     let error = ''
@@ -124,7 +136,10 @@ export default function RegisterForm({ isDark }) {
       })
 
       if (response.ok) {
-        setMessage('✅ ¡Bienvenido! Tu registro ha sido exitoso.')
+        const result = await response.json()
+        const url = `${window.location.origin}?referredBy=${result.id}&referrerName=${encodeURIComponent(formData.fullName)}`
+        setReferralUrl(url)
+        setMessage('✅ ¡Bienvenido! Comparte tu URL de referido:')
         setFormData({
           fullName: '', countryCode: '+57', phone: '', identificationType: '',
           identificationNumber: '', email: '', address: '', municipality: '',
@@ -390,20 +405,18 @@ export default function RegisterForm({ isDark }) {
 
           {/* Checkbox */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 14px', backgroundColor: isDark ? '#0f172a' : '#f1f5f9', borderRadius: '8px', border: !formData.acceptedTerms && touched.acceptedTerms ? '2px solid #ef4444' : 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 14px', backgroundColor: isDark ? '#0f172a' : '#f1f5f9', borderRadius: '8px' }}>
               <input
                 type="checkbox"
                 name="acceptedTerms"
                 checked={formData.acceptedTerms}
                 onChange={handleChange}
-                onBlur={() => setTouched(prev => ({ ...prev, acceptedTerms: true }))}
                 style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: '#FFC300' }}
               />
               <label style={{ fontWeight: '600', margin: 0, cursor: 'pointer', color: isDark ? '#f5f5f5' : '#000' }}>
                 Acepto términos y condiciones *
               </label>
             </div>
-            {!formData.acceptedTerms && touched.acceptedTerms && <p style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px' }}>⚠️ Debes aceptar los términos</p>}
           </div>
 
           {/* Submit */}
@@ -433,7 +446,31 @@ export default function RegisterForm({ isDark }) {
 
           {message && (
             <div style={{ padding: '14px', borderRadius: '8px', textAlign: 'center', fontWeight: '600', backgroundColor: message.includes('✅') ? '#dcfce7' : '#fee2e2', color: message.includes('✅') ? '#166534' : '#991b1b', animation: 'slideIn 0.3s ease-out' }}>
-              {message}
+              <div>{message}</div>
+              {referralUrl && (
+                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
+                  <div style={{ backgroundColor: 'rgba(0,0,0,0.1)', padding: '10px 12px', borderRadius: '6px', fontSize: '12px', wordBreak: 'break-all', maxWidth: '90%' }}>
+                    {referralUrl}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(referralUrl)}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: copied ? '#059669' : '#003087',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '13px',
+                      transition: 'background-color 0.2s'
+                    }}
+                  >
+                    {copied ? '✓ Copiado' : 'Copiar URL'}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </form>
