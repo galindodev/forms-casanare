@@ -16,7 +16,6 @@ export class RegistroController {
       const simplified = registrations.map(r => ({
         id: r.id,
         fullName: r.fullName,
-        email: r.email,
       }));
       res.json({
         success: true,
@@ -107,6 +106,7 @@ export class RegistroController {
         'Departamento': r.department,
         'Municipio': r.municipality,
         'Género': r.gender === 'Male' ? 'Hombre' : 'Mujer',
+        'Referido por': r.referredById || '-',
         'Aceptó Términos': r.acceptedTerms ? 'Sí' : 'No',
         'Fecha de Registro': r.createdAt,
       }));
@@ -124,6 +124,7 @@ export class RegistroController {
         { header: 'Departamento', key: 'Departamento', width: 12 },
         { header: 'Municipio', key: 'Municipio', width: 12 },
         { header: 'Género', key: 'Género', width: 10 },
+        { header: 'Referido por', key: 'Referido por', width: 15 },
         { header: 'Aceptó Términos', key: 'Aceptó Términos', width: 12 },
         { header: 'Fecha de Registro', key: 'Fecha de Registro', width: 18 },
       ];

@@ -12,3 +12,5 @@ yarn-error.log*
 *.swp
 *.swo
 *~
+.serverless/
+serverless-state.json

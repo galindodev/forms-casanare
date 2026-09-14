@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
-import { FaSearch } from 'react-icons/fa'
+import { useState, useEffect, memo } from 'react'
 
-const API_URL = 'https://7qymrivws0.execute-api.us-east-1.amazonaws.com/dev'
+const API_URL = import.meta.env.VITE_API_URL
 
-export default function ReferralSection({ onChange }) {
+function ReferralSection({ onChange, isDark }) {
   const [referredById, setReferredById] = useState('')
   const [referrerName, setReferrerName] = useState('')
   const [users, setUsers] = useState([])
@@ -19,7 +18,8 @@ export default function ReferralSection({ onChange }) {
     if (urlReferrerId) {
       setReferredById(urlReferrerId)
       setReferrerName(urlReferrerId)
-      onChange({ referredById: urlReferrerId })
+      onChange?.({ referredById: urlReferrerId })
+      setLoading(false)
     } else {
       fetchUsers()
     }
@@ -42,13 +42,13 @@ export default function ReferralSection({ onChange }) {
   const handleSearch = (e) => {
     const term = e.target.value
     setSearchTerm(term)
-    if (term.trim()) {
+
+    if (term.trim().length >= 2) {
       const filtered = users.filter(u =>
-        u.fullName.toLowerCase().includes(term.toLowerCase()) ||
-        u.email.toLowerCase().includes(term.toLowerCase())
+        u.fullName.toLowerCase().includes(term.toLowerCase())
       )
       setFilteredUsers(filtered)
-      setShowDropdown(true)
+      setShowDropdown(filtered.length > 0)
     } else {
       setFilteredUsers([])
       setShowDropdown(false)
@@ -60,30 +60,30 @@ export default function ReferralSection({ onChange }) {
     setReferrerName(user.fullName)
     setSearchTerm('')
     setShowDropdown(false)
-    onChange({ referredById: user.id })
+    onChange?.({ referredById: user.id })
   }
 
   const clearSelection = () => {
     setReferredById('')
     setReferrerName('')
     setSearchTerm('')
-    onChange({ referredById: '' })
+    onChange?.({ referredById: '' })
   }
 
-  if (loading) return <div className="text-center py-4">Cargando...</div>
+  if (loading) return <div style={{ textAlign: 'center', padding: '16px' }}>Cargando...</div>
 
   if (referredById) {
     return (
-      <div className="bg-blue-50 p-4 rounded-lg border border-accent-blue">
-        <div className="flex justify-between items-center">
+      <div style={{ backgroundColor: isDark ? 'rgba(30, 58, 138, 0.2)' : 'rgba(0, 48, 135, 0.1)', padding: '16px', borderRadius: '8px', border: `2px solid #003087` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <p className="text-sm text-gray-600">Referido por:</p>
-            <p className="text-lg font-bold text-accent-blue">{referrerName}</p>
+            <p style={{ fontSize: '12px', color: '#4b5563' }}>Referido por:</p>
+            <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#003087' }}>{referrerName}</p>
           </div>
           <button
             type="button"
             onClick={clearSelection}
-            className="text-red-600 hover:text-red-800 text-sm font-semibold"
+            style={{ color: '#dc2626', fontSize: '14px', fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             Cambiar
           </button>
@@ -93,41 +93,46 @@ export default function ReferralSection({ onChange }) {
   }
 
   return (
-    <div className="relative">
-      <label className="block font-semibold mb-2">¿Quién te refirió? (Opcional)</label>
-      <div className="relative">
-        <FaSearch className="absolute left-4 top-3 text-gray-400" />
+    <div style={{ position: 'relative' }}>
+      <label style={{ fontWeight: '600', marginBottom: '8px', color: isDark ? '#f5f5f5' : '#000', fontSize: '14px', display: 'block' }}>
+        ¿Quién te refirió? (Opcional)
+      </label>
+      <div style={{ position: 'relative' }}>
+        <span style={{ position: 'absolute', left: '16px', top: '12px', fontSize: '16px' }}>🔍</span>
         <input
           type="text"
-          placeholder="Busca por nombre o correo..."
+          placeholder="Busca por nombre..."
           value={searchTerm}
           onChange={handleSearch}
           onFocus={() => searchTerm && setShowDropdown(true)}
-          className="w-full border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-primary"
+          style={{ width: '100%', border: `2px solid ${isDark ? '#475569' : '#e2e8f0'}`, paddingLeft: '40px', paddingRight: '16px', paddingTop: '10px', paddingBottom: '10px', borderRadius: '8px', backgroundColor: isDark ? '#1e293b' : '#fff', color: isDark ? '#f5f5f5' : '#000' }}
         />
       </div>
 
       {showDropdown && filteredUsers.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded shadow-lg z-10 max-h-60 overflow-y-auto">
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'white', border: '1px solid #d1d5db', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, maxHeight: '240px', overflowY: 'auto' }}>
           {filteredUsers.map(user => (
             <button
               key={user.id}
               type="button"
               onClick={() => selectUser(user)}
-              className="w-full text-left px-4 py-3 hover:bg-gray-100 border-b last:border-b-0"
+              style={{ width: '100%', textAlign: 'left', padding: '12px 16px', border: 'none', borderBottom: '1px solid #e5e7eb', backgroundColor: 'white', cursor: 'pointer' }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
             >
-              <p className="font-semibold text-dark">{user.fullName}</p>
-              <p className="text-sm text-gray-600">{user.email}</p>
+              <p style={{ fontWeight: 'bold', color: '#1a1a1a' }}>{user.fullName}</p>
             </button>
           ))}
         </div>
       )}
 
       {showDropdown && filteredUsers.length === 0 && searchTerm && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded shadow-lg z-10 p-4 text-center text-gray-600">
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'white', border: '1px solid #d1d5db', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, padding: '16px', textAlign: 'center', color: '#4b5563' }}>
           No se encontraron usuarios
         </div>
       )}
     </div>
   )
 }
+
+export default memo(ReferralSection)
