@@ -1,15 +1,48 @@
 import { Request, Response } from 'express';
+import { injectable } from 'tsyringe';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 import { RegistroService } from '../services/RegistroService';
-import { Registro } from '../../domain/entities/Registro';
+import { CreateRegistroDTO } from '../dtos/CreateRegistroDTO';
 import ExcelJS from 'exceljs';
 
+@injectable()
 export class RegistroController {
   constructor(private service: RegistroService) {}
 
+  async getAllRegistrations(req: Request, res: Response): Promise<void> {
+    try {
+      const registrations = await this.service.getRegistrations();
+      res.json({
+        success: true,
+        data: registrations,
+        count: registrations.length,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message || 'Error fetching registrations',
+      });
+    }
+  }
+
   async createRegistration(req: Request, res: Response): Promise<void> {
     try {
-      const data: Registro = req.body;
-      const id = await this.service.createRegistration(data);
+      const dto = plainToInstance(CreateRegistroDTO, req.body);
+      const errors = await validate(dto);
+
+      if (errors.length > 0) {
+        res.status(400).json({
+          success: false,
+          errors: errors.map((e) => ({
+            field: e.property,
+            messages: Object.values(e.constraints || {}),
+          })),
+        });
+        return;
+      }
+
+      const id = await this.service.createRegistration(dto);
       res.status(201).json({
         success: true,
         message: 'Registration created successfully',
@@ -19,6 +52,32 @@ export class RegistroController {
       res.status(400).json({
         success: false,
         error: error.message || 'Error creating registration',
+      });
+    }
+  }
+
+  async deleteAllRegistrations(req: Request, res: Response): Promise<void> {
+    try {
+      const confirm = req.query.confirm as string;
+
+      if (confirm !== 'DELETE_ALL') {
+        res.status(403).json({
+          success: false,
+          error: 'Confirmation required. Add ?confirm=DELETE_ALL to delete all records.',
+        });
+        return;
+      }
+
+      await this.service.deleteAllRegistrations();
+
+      res.json({
+        success: true,
+        message: 'All registrations deleted successfully',
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message || 'Error deleting registrations',
       });
     }
   }
@@ -33,6 +92,7 @@ export class RegistroController {
       const mappedData = registrations.map((r) => ({
         'ID': r.id,
         'Nombres Completos': r.fullName,
+        'Indicativo': r.countryCode,
         'Celular': r.phone,
         'Tipo de Identificación': r.identificationType,
         'Número de Identificación': r.identificationNumber,
@@ -49,6 +109,7 @@ export class RegistroController {
       worksheet.columns = [
         { header: 'ID', key: 'ID', width: 10 },
         { header: 'Nombres Completos', key: 'Nombres Completos', width: 25 },
+        { header: 'Indicativo', key: 'Indicativo', width: 12 },
         { header: 'Celular', key: 'Celular', width: 15 },
         { header: 'Tipo de Identificación', key: 'Tipo de Identificación', width: 15 },
         { header: 'Número de Identificación', key: 'Número de Identificación', width: 18 },

@@ -1,6 +1,7 @@
 export interface Registro {
   id?: number;
   fullName: string;
+  countryCode: string;
   phone: string;
   identificationType: string;
   identificationNumber: string;

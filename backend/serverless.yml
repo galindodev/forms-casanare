@@ -9,13 +9,17 @@ provider:
   stage: ${opt:stage, 'dev'}
   memorySize: 512
   timeout: 30
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource: "*"
   environment:
-    DB_HOST: ${env:DB_HOST}
-    DB_USER: ${env:DB_USER}
-    DB_PASSWORD: ${env:DB_PASSWORD}
-    DB_NAME: ${env:DB_NAME}
-    DB_PORT: ${env:DB_PORT}
-    JWT_SECRET: ${env:JWT_SECRET}
+    DYNAMODB_TABLE_NAME: ${env:DYNAMODB_TABLE_NAME, 'registrations'}
+    AWS_REGION: us-east-1
+    CORS_ORIGIN: ${env:CORS_ORIGIN, '*'}
     NODE_ENV: production
 
 package:
@@ -41,6 +45,8 @@ plugins:
 custom:
   serverless-offline:
     httpPort: 3000
- 
-   
+
+hooks:
+  after:package:initialize:
+    - npm run build
  
