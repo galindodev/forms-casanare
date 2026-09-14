@@ -5,17 +5,21 @@ let docClient: DynamoDBDocumentClient | null = null;
 
 export function getDocClient(): DynamoDBDocumentClient {
   if (!docClient) {
-    const dynamoDbClient = new DynamoDBClient({
-      region: process.env.AWS_REGION || 'us-east-1',
+    const config: any = {
+      region: 'us-east-1',
       endpoint: process.env.DYNAMODB_ENDPOINT,
-      credentials: process.env.DYNAMODB_ENDPOINT
-        ? {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'local',
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'local',
-          }
-        : undefined,
-    });
+    };
 
+    // Local development with credentials
+    if (process.env.DYNAMODB_ENDPOINT) {
+      config.credentials = {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'local',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'local',
+      };
+    }
+    // AWS Lambda uses IAM role automatically
+
+    const dynamoDbClient = new DynamoDBClient(config);
     docClient = DynamoDBDocumentClient.from(dynamoDbClient);
   }
   return docClient;

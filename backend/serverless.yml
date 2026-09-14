@@ -18,7 +18,6 @@ provider:
           Resource: "*"
   environment:
     DYNAMODB_TABLE_NAME: ${env:DYNAMODB_TABLE_NAME, 'registrations'}
-    AWS_REGION: us-east-1
     CORS_ORIGIN: ${env:CORS_ORIGIN, '*'}
     NODE_ENV: production
 
@@ -45,8 +44,4 @@ plugins:
 custom:
   serverless-offline:
     httpPort: 3000
-
-hooks:
-  after:package:initialize:
-    - npm run build
  
