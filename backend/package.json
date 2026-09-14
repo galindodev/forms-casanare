@@ -1,0 +1,52 @@
+{
+  "name": "defensores-casanare-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Defensores de la Patria - Casanare form",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "dev:full": "npm run build && npm run db:init && npm run dev",
+    "build": "tsc",
+    "start": "npm run db:init && node dist/index.js",
+    "start:auto": "npm run build && ts-node scripts/start.ts",
+    "db:init": "ts-node scripts/init-dynamodb.ts",
+    "token": "ts-node scripts/generate-token.ts",
+    "typecheck": "tsc --noEmit",
+    "deploy": "npm run build && serverless deploy --stage dev",
+    "deploy:dev": "npm run build && serverless deploy --stage dev",
+    "deploy:prod": "npm run build && serverless deploy --stage prod"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.400.0",
+    "@aws-sdk/lib-dynamodb": "^3.400.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "exceljs": "^4.2.0",
+    "express": "^4.18.0",
+    "express-rate-limit": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "reflect-metadata": "^0.1.13",
+    "serverless-http": "^3.0.0",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "tsyringe": "^4.8.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.0",
+    "@types/express-rate-limit": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@types/node": "^20.0.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/uuid": "^9.0.0",
+    "serverless": "^3.0.0",
+    "serverless-offline": "^12.0.0",
+    "serverless-plugin-tracing": "^2.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0"
+  }
+}

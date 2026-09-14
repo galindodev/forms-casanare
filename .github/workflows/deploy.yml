@@ -1,0 +1,76 @@
+name: Deploy Backend to Lambda
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Run tests (if any)
+        working-directory: backend
+        run: npm run typecheck
+
+      - name: Build backend
+        working-directory: backend
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Wait for CloudFormation stack to be ready
+        run: |
+          # Wait for stack to be in a valid state (exists and not in DELETE_IN_PROGRESS)
+          for i in {1..30}; do
+            STATUS=$(aws cloudformation describe-stacks --stack-name defensores-casanare-api-dev --region us-east-1 --query 'Stacks[0].StackStatus' --output text 2>/dev/null || echo "DOES_NOT_EXIST")
+            if [[ "$STATUS" == "DOES_NOT_EXIST" || "$STATUS" == "CREATE_COMPLETE" || "$STATUS" == "UPDATE_COMPLETE" ]]; then
+              echo "Stack is ready (status: $STATUS)"
+              break
+            fi
+            echo "Waiting... (status: $STATUS)"
+            sleep 2
+          done
+        continue-on-error: true
+
+      - name: Deploy to Lambda
+        working-directory: backend
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            npm run deploy:prod
+          else
+            npm run deploy:dev
+          fi
+        env:
+          DYNAMODB_TABLE_NAME: ${{ secrets.DYNAMODB_TABLE_NAME || 'registrations' }}
+          AWS_REGION: us-east-1
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN || '*' }}
+
+      - name: Deployment notification
+        if: success()
+        run: |
+          echo "✓ Backend deployed successfully to Lambda"
+          echo "  - Database: DynamoDB (auto-initialized on startup)"
+          echo "  - Endpoints: GET, POST, DELETE /api/registrations"
+          echo "  - Docs: https://api.example.com/api-docs"

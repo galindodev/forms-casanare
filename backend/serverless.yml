@@ -1,0 +1,47 @@
+service: defensores-casanare-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 512
+  timeout: 30
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource: "*"
+  environment:
+    DYNAMODB_TABLE_NAME: ${env:DYNAMODB_TABLE_NAME, 'registrations'}
+    CORS_ORIGIN: ${env:CORS_ORIGIN, '*'}
+    NODE_ENV: production
+
+package:
+  individually: false
+
+functions:
+  api:
+    handler: dist/handler.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+      - http:
+          path: /
+          method: ANY
+          cors: true
+
+plugins:
+  # - serverless-offline
+  - serverless-plugin-tracing
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+ 
