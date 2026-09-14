@@ -14,10 +14,11 @@ function ReferralSection({ onChange, isDark }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const urlReferrerId = params.get('referredBy')
+    const urlReferrerName = params.get('referrerName')
 
     if (urlReferrerId) {
       setReferredById(urlReferrerId)
-      setReferrerName(urlReferrerId)
+      setReferrerName(urlReferrerName || urlReferrerId)
       onChange?.({ referredById: urlReferrerId })
       setLoading(false)
     } else {
