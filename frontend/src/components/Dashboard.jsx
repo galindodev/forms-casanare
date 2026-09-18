@@ -270,10 +270,10 @@ export default function Dashboard({ isDark, onLogout }) {
               }}>
                 <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', width: '40px' }}></th>
                 <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Nombre</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 768px)': { display: 'table-cell' } }}>Email</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>Teléfono</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>Municipio</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>Fecha</th>
+                <th className="table-email" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Email</th>
+                <th className="table-phone" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Teléfono</th>
+                <th className="table-municipality" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Municipio</th>
+                <th className="table-date" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Fecha</th>
               </tr>
             </thead>
             <tbody>
@@ -296,10 +296,10 @@ export default function Dashboard({ isDark, onLogout }) {
                         <span style={{ color: '#FFC300', fontWeight: 'bold' }}>{expandedRows[i] ? '−' : '+'}</span>
                       </td>
                       <td style={{ padding: '14px 16px', color: isDark ? '#e2e8f0' : '#1a202c', fontWeight: '600' }}>{reg.fullName}</td>
-                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 768px)': { display: 'table-cell' } }}>{reg.email}</td>
-                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>{reg.countryCode} {reg.phone}</td>
-                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>{reg.municipality}</td>
-                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</td>
+                      <td className="table-email" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.email}</td>
+                      <td className="table-phone" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.countryCode} {reg.phone}</td>
+                      <td className="table-municipality" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.municipality}</td>
+                      <td className="table-date" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</td>
                     </tr>
                     {expandedRows[i] && (
                       <tr style={{ background: isDark ? 'rgba(255, 195, 0, 0.03)' : 'rgba(0, 48, 135, 0.02)' }}>
