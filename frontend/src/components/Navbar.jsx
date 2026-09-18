@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi'
+import { FiSun, FiMoon, FiMenu, FiX, FiLock } from 'react-icons/fi'
 
 export default function Navbar({ isDark, setIsDark }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -158,6 +158,35 @@ export default function Navbar({ isDark, setIsDark }) {
             >
               ÚNETE
             </button>
+            <button
+              onClick={() => window.location.href = '/admin'}
+              style={{
+                background: 'linear-gradient(135deg, #FFC300 0%, #FFD700 100%)',
+                color: '#1a1a1a',
+                border: 'none',
+                padding: '10px 12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 16px rgba(255, 195, 0, 0.4)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)'
+                e.target.style.boxShadow = '0 8px 24px rgba(255, 195, 0, 0.5)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)'
+                e.target.style.boxShadow = '0 4px 16px rgba(255, 195, 0, 0.4)'
+              }}
+              title="Acceso administrador"
+            >
+              <FiLock size={16} style={{ fontWeight: 'bold' }} />
+            </button>
           </div>
         )}
 
@@ -265,6 +294,41 @@ export default function Navbar({ isDark, setIsDark }) {
             onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
           >
             ÚNETE
+          </button>
+          <button
+            onClick={() => {
+              window.location.href = '/admin'
+              setMenuOpen(false)
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #FFC300 0%, #FFD700 100%)',
+              color: '#1a1a1a',
+              padding: '12px 20px',
+              borderRadius: '8px',
+              fontWeight: '700',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '15px',
+              width: '100%',
+              transition: 'all 0.3s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              boxShadow: '0 4px 16px rgba(255, 195, 0, 0.4)',
+              letterSpacing: '0.5px'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.02)'
+              e.target.style.boxShadow = '0 6px 20px rgba(255, 195, 0, 0.5)'
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)'
+              e.target.style.boxShadow = '0 4px 16px rgba(255, 195, 0, 0.4)'
+            }}
+            title="Acceso administrador"
+          >
+            <FiLock size={18} style={{ fontWeight: 'bold' }} /> Acceso
           </button>
         </div>
       )}

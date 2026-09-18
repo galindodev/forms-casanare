@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -33,7 +33,6 @@ function DashboardWrapper({ isDark }) {
 }
 
 function NotFound() {
-  const navigate = useNavigate()
   return (
     <div style={{ background: 'linear-gradient(to right, #1a1a1a, #003087)', color: '#f5f5f5', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '32px', textAlign: 'center', animation: 'fadeIn 0.5s ease-in' }}>
       <style>{`
@@ -48,7 +47,7 @@ function NotFound() {
         La página que buscas no existe en nuestra comunidad.
       </p>
       <button
-        onClick={() => navigate('/')}
+        onClick={() => window.location.href = '/'}
         onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
         onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
         style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#FFC300', color: '#1a1a1a', padding: '12px 32px', fontSize: '16px', fontWeight: 'bold', borderRadius: '4px', border: 'none', cursor: 'pointer', transition: 'transform 0.2s' }}
@@ -57,6 +56,14 @@ function NotFound() {
       </button>
     </div>
   )
+}
+
+function DashboardWrapper({ isDark }) {
+  const handleLogout = () => {
+    sessionStorage.removeItem('dashboardAuth')
+    window.location.href = '/'
+  }
+  return <Dashboard isDark={isDark} onLogout={handleLogout} />
 }
 
 export default function App() {
