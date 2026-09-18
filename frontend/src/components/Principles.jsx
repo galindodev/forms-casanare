@@ -23,7 +23,7 @@ export default function Principles({ isDark }) {
           <h2 style={{
             fontSize: 'clamp(32px, 7vw, 52px)',
             fontWeight: '900',
-            background: 'linear-gradient(135deg, #003087 0%, #0066cc 100%)',
+            background: 'linear-gradient(135deg, #FFC300 0%, #FFD700 100%)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -115,7 +115,10 @@ export default function Principles({ isDark }) {
                 <h3 style={{
                   fontSize: 'clamp(18px, 4vw, 22px)',
                   fontWeight: '800',
-                  color: '#003087',
+                  background: 'linear-gradient(135deg, #003087 0%, #0066cc 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
                   marginBottom: '14px',
                   letterSpacing: '1px'
                 }}>
