@@ -52,9 +52,10 @@ function NotFound() {
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('darkMode') === 'true'
+      const saved = localStorage.getItem('darkMode')
+      return saved !== null ? saved === 'true' : true
     }
-    return false
+    return true
   })
 
   useEffect(() => {

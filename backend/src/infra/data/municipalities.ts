@@ -1,0 +1,21 @@
+export const MUNICIPALITIES = [
+  'Yopal',
+  'Aguazul',
+  'Tauramena',
+  'Villanueva',
+  'Monterrey',
+  'Paz de Ariporo',
+  'Maní',
+  'Orocué',
+  'Pore',
+  'Chámeza',
+  'Hato Corozal',
+  'La Salina',
+  'Nunchía',
+  'Recetor',
+  'Sabanalarga',
+  'Sácama',
+  'San Luis de Palenque',
+  'Támara',
+  'Trinidad'
+]

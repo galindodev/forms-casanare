@@ -117,6 +117,30 @@ router.post(
 
 /**
  * @swagger
+ * /api/registrations/municipalities:
+ *   get:
+ *     summary: Get list of municipalities
+ *     tags:
+ *       - Municipalities
+ *     responses:
+ *       200:
+ *         description: List of municipalities
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 - Yopal
+ *                 - Aguazul
+ *                 - Tauramena
+ */
+router.get(
+  '/municipalities',
+  (req, res) => registroController.getMunicipalities(req, res)
+);
+
+/**
+ * @swagger
  * /api/registrations/excel:
  *   get:
  *     summary: Download registrations as Excel file

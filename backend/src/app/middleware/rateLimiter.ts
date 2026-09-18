@@ -1,8 +1,8 @@
 import rateLimit from 'express-rate-limit';
 
 export const registrationLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
+  windowMs: 60 * 1000,
+  max: 50,
   message: 'Too many registrations from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,

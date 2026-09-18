@@ -7,6 +7,7 @@ export interface Registro {
   identificationNumber: string;
   email: string;
   address: string;
+  neighborhood: string;
   ageGroup: string;
   department: string;
   municipality: string;

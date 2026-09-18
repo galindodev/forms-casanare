@@ -27,6 +27,10 @@ export class CreateRegistroDTO {
   address!: string;
 
   @IsString()
+  @MinLength(2)
+  neighborhood!: string;
+
+  @IsString()
   ageGroup!: string;
 
   @IsString()

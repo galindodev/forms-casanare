@@ -55,6 +55,7 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
         identificationNumber: item.identificationNumber,
         email: item.email,
         address: item.address,
+        neighborhood: item.neighborhood,
         ageGroup: item.ageGroup,
         department: item.department,
         municipality: item.municipality,

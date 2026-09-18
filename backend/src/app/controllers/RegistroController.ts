@@ -102,6 +102,7 @@ export class RegistroController {
         'Número de Identificación': r.identificationNumber,
         'Correo Electrónico': r.email,
         'Dirección Completa': r.address,
+        'Barrio o Vereda': r.neighborhood,
         'Grupo de Edad': r.ageGroup,
         'Departamento': r.department,
         'Municipio': r.municipality,
@@ -120,6 +121,7 @@ export class RegistroController {
         { header: 'Número de Identificación', key: 'Número de Identificación', width: 18 },
         { header: 'Correo Electrónico', key: 'Correo Electrónico', width: 25 },
         { header: 'Dirección Completa', key: 'Dirección Completa', width: 25 },
+        { header: 'Barrio o Vereda', key: 'Barrio o Vereda', width: 20 },
         { header: 'Grupo de Edad', key: 'Grupo de Edad', width: 12 },
         { header: 'Departamento', key: 'Departamento', width: 12 },
         { header: 'Municipio', key: 'Municipio', width: 12 },
@@ -154,6 +156,25 @@ export class RegistroController {
         success: false,
         error: error.message || 'Error generating Excel file',
       });
+    }
+  }
+
+  async getMunicipalities(req: Request, res: Response): Promise<void> {
+    try {
+      const municipalities = [
+        'Yopal', 'Aguazul', 'Tauramena', 'Villanueva', 'Monterrey', 'Paz de Ariporo',
+        'Maní', 'Orocué', 'Pore', 'Chámeza', 'Hato Corozal', 'La Salina', 'Nunchía',
+        'Recetor', 'Sabanalarga', 'Sácama', 'San Luis de Palenque', 'Támara', 'Trinidad'
+      ]
+      res.json({
+        success: true,
+        data: municipalities
+      })
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message || 'Error fetching municipalities'
+      })
     }
   }
 }
