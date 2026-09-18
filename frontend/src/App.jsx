@@ -58,14 +58,6 @@ function NotFound() {
   )
 }
 
-function DashboardWrapper({ isDark }) {
-  const handleLogout = () => {
-    sessionStorage.removeItem('dashboardAuth')
-    window.location.href = '/'
-  }
-  return <Dashboard isDark={isDark} onLogout={handleLogout} />
-}
-
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
