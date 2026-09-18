@@ -7,6 +7,8 @@ import Principles from './components/Principles'
 import RegisterForm from './components/RegisterForm'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import Dashboard from './components/Dashboard'
+import DashboardLogin from './components/DashboardLogin'
 
 function Landing({ isDark, setIsDark }) {
   return (
@@ -20,6 +22,14 @@ function Landing({ isDark, setIsDark }) {
       <ScrollToTop />
     </div>
   )
+}
+
+function DashboardWrapper({ isDark }) {
+  const handleLogout = () => {
+    sessionStorage.removeItem('dashboardAuth')
+    window.location.href = '/'
+  }
+  return <Dashboard isDark={isDark} onLogout={handleLogout} />
 }
 
 function NotFound() {
@@ -66,6 +76,14 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing isDark={isDark} setIsDark={setIsDark} />} />
+        <Route
+          path="/admin"
+          element={
+            sessionStorage.getItem('dashboardAuth')
+              ? <DashboardWrapper isDark={isDark} />
+              : <DashboardLogin isDark={isDark} />
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
