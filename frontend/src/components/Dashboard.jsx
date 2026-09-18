@@ -8,6 +8,7 @@ export default function Dashboard({ isDark, onLogout }) {
   const [topReferrers, setTopReferrers] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [expandedRows, setExpandedRows] = useState({})
 
   useEffect(() => {
     fetchData()
@@ -145,7 +146,7 @@ export default function Dashboard({ isDark, onLogout }) {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '40px' }} >
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '40px' }} >
           {/* Top Referrers */}
           <div style={{
             background: isDark ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)',
@@ -267,39 +268,69 @@ export default function Dashboard({ isDark, onLogout }) {
                 background: isDark ? 'rgba(15, 23, 42, 0.6)' : 'rgba(0, 48, 135, 0.08)',
                 borderBottom: `2px solid ${isDark ? 'rgba(255, 195, 0, 0.1)' : 'rgba(0, 48, 135, 0.1)'}`
               }}>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', width: '40px' }}></th>
                 <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Nombre</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Email</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Teléfono</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Municipio</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Fecha</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 768px)': { display: 'table-cell' } }}>Email</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>Teléfono</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>Municipio</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>Fecha</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>Cargando...</td>
+                  <td colSpan="6" style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>Cargando...</td>
                 </tr>
               ) : filteredRegistrations.length > 0 ? (
                 filteredRegistrations.map((reg, i) => (
-                  <tr
-                    key={i}
-                    style={{
-                      borderBottom: `1px solid ${isDark ? 'rgba(255, 195, 0, 0.05)' : 'rgba(0, 48, 135, 0.05)'}`,
-                      transition: 'background 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = isDark ? 'rgba(255, 195, 0, 0.05)' : 'rgba(0, 48, 135, 0.05)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <td style={{ padding: '14px 16px', color: isDark ? '#e2e8f0' : '#1a202c', fontWeight: '600' }}>{reg.fullName}</td>
-                    <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.email}</td>
-                    <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.countryCode} {reg.phone}</td>
-                    <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.municipality}</td>
-                    <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</td>
-                  </tr>
+                  <tbody key={i}>
+                    <tr
+                      style={{
+                        borderBottom: `1px solid ${isDark ? 'rgba(255, 195, 0, 0.05)' : 'rgba(0, 48, 135, 0.05)'}`,
+                        transition: 'background 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = isDark ? 'rgba(255, 195, 0, 0.05)' : 'rgba(0, 48, 135, 0.05)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <td style={{ padding: '14px 16px', textAlign: 'center', cursor: 'pointer' }} onClick={() => setExpandedRows({...expandedRows, [i]: !expandedRows[i]})}>
+                        <span style={{ color: '#FFC300', fontWeight: 'bold' }}>{expandedRows[i] ? '−' : '+'}</span>
+                      </td>
+                      <td style={{ padding: '14px 16px', color: isDark ? '#e2e8f0' : '#1a202c', fontWeight: '600' }}>{reg.fullName}</td>
+                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 768px)': { display: 'table-cell' } }}>{reg.email}</td>
+                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>{reg.countryCode} {reg.phone}</td>
+                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>{reg.municipality}</td>
+                      <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b', display: 'none', '@media (min-width: 1024px)': { display: 'table-cell' } }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</td>
+                    </tr>
+                    {expandedRows[i] && (
+                      <tr style={{ background: isDark ? 'rgba(255, 195, 0, 0.03)' : 'rgba(0, 48, 135, 0.02)' }}>
+                        <td></td>
+                        <td colSpan="5" style={{ padding: '16px' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                            <div>
+                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>EMAIL</p>
+                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.email}</p>
+                            </div>
+                            <div>
+                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>TELÉFONO</p>
+                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.countryCode} {reg.phone}</p>
+                            </div>
+                            <div>
+                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>MUNICIPIO</p>
+                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.municipality}</p>
+                            </div>
+                            <div>
+                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>FECHA</p>
+                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>No hay registros</td>
+                  <td colSpan="6" style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>No hay registros</td>
                 </tr>
               )}
             </tbody>
