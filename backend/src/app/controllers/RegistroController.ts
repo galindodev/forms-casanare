@@ -94,8 +94,7 @@ export class RegistroController {
         'Nombres Completos': r.fullName,
         'Indicativo': r.countryCode,
         'Celular': r.phone,
-        'Tipo de Identificación': r.identificationType,
-        'Número de Identificación': r.identificationNumber,
+        'Número de Documento': r.identificationNumber,
         'Correo Electrónico': r.email,
         'Dirección Completa': r.address,
         'Barrio o Vereda': r.neighborhood,
@@ -103,6 +102,9 @@ export class RegistroController {
         'Departamento': r.department,
         'Municipio': r.municipality,
         'Género': r.gender === 'Male' ? 'Hombre' : 'Mujer',
+        'Tipo de Población': r.populationType || '-',
+        'Enfoque Poblacional': r.ethnicFocus || '-',
+        'Referidos': r.referralCount ?? 0,
         'Referido por': r.referredById || '-',
         'Aceptó Términos': r.acceptedTerms ? 'Sí' : 'No',
         'Fecha de Registro': r.createdAt,
@@ -113,8 +115,7 @@ export class RegistroController {
         { header: 'Nombres Completos', key: 'Nombres Completos', width: 25 },
         { header: 'Indicativo', key: 'Indicativo', width: 12 },
         { header: 'Celular', key: 'Celular', width: 15 },
-        { header: 'Tipo de Identificación', key: 'Tipo de Identificación', width: 15 },
-        { header: 'Número de Identificación', key: 'Número de Identificación', width: 18 },
+        { header: 'Número de Documento', key: 'Número de Documento', width: 20 },
         { header: 'Correo Electrónico', key: 'Correo Electrónico', width: 25 },
         { header: 'Dirección Completa', key: 'Dirección Completa', width: 25 },
         { header: 'Barrio o Vereda', key: 'Barrio o Vereda', width: 20 },
@@ -122,6 +123,9 @@ export class RegistroController {
         { header: 'Departamento', key: 'Departamento', width: 12 },
         { header: 'Municipio', key: 'Municipio', width: 12 },
         { header: 'Género', key: 'Género', width: 10 },
+        { header: 'Tipo de Población', key: 'Tipo de Población', width: 28 },
+        { header: 'Enfoque Poblacional', key: 'Enfoque Poblacional', width: 24 },
+        { header: 'Referidos', key: 'Referidos', width: 12 },
         { header: 'Referido por', key: 'Referido por', width: 15 },
         { header: 'Aceptó Términos', key: 'Aceptó Términos', width: 12 },
         { header: 'Fecha de Registro', key: 'Fecha de Registro', width: 18 },
@@ -151,6 +155,40 @@ export class RegistroController {
       res.status(500).json({
         success: false,
         error: error.message || 'Error generating Excel file',
+      });
+    }
+  }
+
+  async getReferralStats(req: Request, res: Response): Promise<void> {
+    try {
+      const identificationNumber = String(req.params.identificationNumber || '').trim();
+
+      if (!/^\d{5,15}$/.test(identificationNumber)) {
+        res.status(400).json({
+          success: false,
+          error: 'Número de cédula inválido',
+        });
+        return;
+      }
+
+      const stats = await this.service.getReferralStats(identificationNumber);
+
+      if (!stats) {
+        res.status(404).json({
+          success: false,
+          error: 'No se encontró un registro con esa cédula',
+        });
+        return;
+      }
+
+      res.json({
+        success: true,
+        data: stats,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message || 'Error consultando referidos',
       });
     }
   }

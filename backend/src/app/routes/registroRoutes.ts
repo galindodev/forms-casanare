@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { container } from '../../infra/container/container';
 import { RegistroController } from '../controllers/RegistroController';
-import { registrationLimiter, excelLimiter } from '../middleware/rateLimiter';
+import { registrationLimiter, excelLimiter, referralStatsLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 const registroController = container.resolve(RegistroController);
@@ -137,6 +137,41 @@ router.post(
 router.get(
   '/municipalities',
   (req, res) => registroController.getMunicipalities(req, res)
+);
+
+/**
+ * @swagger
+ * /api/registrations/referrals/{identificationNumber}:
+ *   get:
+ *     summary: Public lookup of referral count by identification number
+ *     tags:
+ *       - Registrations
+ *     parameters:
+ *       - in: path
+ *         name: identificationNumber
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Cédula (5-15 digits)
+ *     responses:
+ *       200:
+ *         description: Referral stats
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 fullName: Juan Carlos Rodríguez
+ *                 referrals: 4
+ *       400:
+ *         description: Invalid identification number
+ *       404:
+ *         description: Not found
+ */
+router.get(
+  '/referrals/:identificationNumber',
+  referralStatsLimiter,
+  (req, res) => registroController.getReferralStats(req, res)
 );
 
 /**
