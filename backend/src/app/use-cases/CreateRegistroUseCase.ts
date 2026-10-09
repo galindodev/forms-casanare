@@ -7,8 +7,21 @@ import { CreateRegistroDTO } from '../dtos/CreateRegistroDTO';
 export class CreateRegistroUseCase {
   constructor(private repository: RegistroRepositoryImpl) {}
 
-  async execute(data: CreateRegistroDTO): Promise<number> {
+  async execute(data: CreateRegistroDTO): Promise<string> {
     this.validateRegistration(data);
+
+    const existingByCedula = await this.repository.findByIdentificationNumber(
+      data.identificationNumber
+    );
+    if (existingByCedula) {
+      throw new Error('Ya existe un registro con esta cédula');
+    }
+
+    const existingByEmail = await this.repository.findByEmail(data.email);
+    if (existingByEmail) {
+      throw new Error('Ya existe un registro con este correo electrónico');
+    }
+
     try {
       return await this.repository.save(data as Registro);
     } catch (error: any) {

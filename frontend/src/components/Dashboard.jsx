@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { FiDownload, FiEye, FiEyeOff, FiLogOut } from 'react-icons/fi'
 
 const API_URL = import.meta.env.VITE_API_URL
@@ -9,9 +9,18 @@ export default function Dashboard({ isDark, onLogout }) {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [expandedRows, setExpandedRows] = useState({})
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  )
 
   useEffect(() => {
     fetchData()
+  }, [])
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
 
   const fetchData = async () => {
@@ -60,7 +69,16 @@ export default function Dashboard({ isDark, onLogout }) {
 
   const filteredRegistrations = registrations.filter(reg =>
     reg.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    reg.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    reg.identificationNumber?.includes(searchTerm)
+  )
+
+  const colCount = isMobile ? 3 : 8
+  // Keys already shown in the main row — the expand only reveals the rest
+  const visibleKeys = new Set(
+    isMobile
+      ? ['fullName', 'referralCount']
+      : ['fullName', 'identificationNumber', 'email', 'phone', 'municipality', 'referralCount', 'createdAt']
   )
 
   return (
@@ -270,67 +288,83 @@ export default function Dashboard({ isDark, onLogout }) {
               }}>
                 <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300', width: '40px' }}></th>
                 <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Nombre</th>
-                <th className="table-email" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Email</th>
-                <th className="table-phone" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Teléfono</th>
-                <th className="table-municipality" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Municipio</th>
-                <th className="table-date" style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Fecha</th>
+                {!isMobile && <>
+                  <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Documento</th>
+                  <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Email</th>
+                  <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Teléfono</th>
+                  <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Municipio</th>
+                  <th style={{ padding: '16px', textAlign: 'center', fontWeight: '700', color: '#FFC300' }}>Referidos</th>
+                  <th style={{ padding: '16px', textAlign: 'left', fontWeight: '700', color: '#FFC300' }}>Fecha</th>
+                </>}
+                {isMobile && <th style={{ padding: '16px', textAlign: 'center', fontWeight: '700', color: '#FFC300' }}>Ref.</th>}
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>Cargando...</td>
+                  <td colSpan={colCount} style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>Cargando...</td>
                 </tr>
               ) : filteredRegistrations.length > 0 ? (
                 filteredRegistrations.map((reg, i) => (
-                  <tbody key={i}>
+                  <Fragment key={i}>
                     <tr
                       style={{
                         borderBottom: `1px solid ${isDark ? 'rgba(255, 195, 0, 0.05)' : 'rgba(0, 48, 135, 0.05)'}`,
-                        transition: 'background 0.2s'
+                        transition: 'background 0.2s',
+                        cursor: 'pointer'
                       }}
+                      onClick={() => setExpandedRows({...expandedRows, [i]: !expandedRows[i]})}
                       onMouseEnter={(e) => e.currentTarget.style.background = isDark ? 'rgba(255, 195, 0, 0.05)' : 'rgba(0, 48, 135, 0.05)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <td style={{ padding: '14px 16px', textAlign: 'center', cursor: 'pointer' }} onClick={() => setExpandedRows({...expandedRows, [i]: !expandedRows[i]})}>
+                      <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                         <span style={{ color: '#FFC300', fontWeight: 'bold' }}>{expandedRows[i] ? '−' : '+'}</span>
                       </td>
                       <td style={{ padding: '14px 16px', color: isDark ? '#e2e8f0' : '#1a202c', fontWeight: '600' }}>{reg.fullName}</td>
-                      <td className="table-email" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.email}</td>
-                      <td className="table-phone" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.countryCode} {reg.phone}</td>
-                      <td className="table-municipality" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.municipality}</td>
-                      <td className="table-date" style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</td>
+                      {!isMobile && <>
+                        <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.identificationNumber}</td>
+                        <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.email}</td>
+                        <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.countryCode} {reg.phone}</td>
+                        <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.municipality}</td>
+                        <td style={{ padding: '14px 16px', textAlign: 'center' }}><ReferralBadge count={reg.referralCount} /></td>
+                        <td style={{ padding: '14px 16px', color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</td>
+                      </>}
+                      {isMobile && <td style={{ padding: '14px 16px', textAlign: 'center' }}><ReferralBadge count={reg.referralCount} /></td>}
                     </tr>
                     {expandedRows[i] && (
                       <tr style={{ background: isDark ? 'rgba(255, 195, 0, 0.03)' : 'rgba(0, 48, 135, 0.02)' }}>
                         <td></td>
-                        <td colSpan="5" style={{ padding: '16px' }}>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-                            <div>
-                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>EMAIL</p>
-                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.email}</p>
-                            </div>
-                            <div>
-                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>TELÉFONO</p>
-                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.countryCode} {reg.phone}</p>
-                            </div>
-                            <div>
-                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>MUNICIPIO</p>
-                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.municipality}</p>
-                            </div>
-                            <div>
-                              <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '12px' }}>FECHA</p>
-                              <p style={{ margin: 0, color: isDark ? '#cbd5e0' : '#64748b' }}>{reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('es-CO') : '-'}</p>
-                            </div>
+                        <td colSpan={colCount - 1} style={{ padding: '16px 16px 20px' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
+                            {[
+                              { key: 'fullName', label: 'NOMBRE', val: reg.fullName },
+                              { key: 'identificationNumber', label: 'DOCUMENTO', val: reg.identificationNumber },
+                              { key: 'email', label: 'EMAIL', val: reg.email },
+                              { key: 'phone', label: 'TELÉFONO', val: `${reg.countryCode || ''} ${reg.phone || ''}` },
+                              { key: 'address', label: 'DIRECCIÓN', val: reg.address },
+                              { key: 'neighborhood', label: 'BARRIO / VEREDA', val: reg.neighborhood },
+                              { key: 'municipality', label: 'MUNICIPIO', val: reg.municipality },
+                              { key: 'department', label: 'DEPARTAMENTO', val: reg.department },
+                              { key: 'ageGroup', label: 'EDAD', val: reg.ageGroup },
+                              { key: 'gender', label: 'GÉNERO', val: reg.gender === 'Male' ? 'Hombre' : reg.gender === 'Female' ? 'Mujer' : reg.gender },
+                              { key: 'populationType', label: 'TIPO DE POBLACIÓN', val: reg.populationType },
+                              { key: 'referralCount', label: 'REFERIDOS', val: String(reg.referralCount ?? 0) },
+                              { key: 'createdAt', label: 'FECHA', val: reg.createdAt ? new Date(reg.createdAt).toLocaleString('es-CO') : '-' },
+                            ].filter(f => !visibleKeys.has(f.key)).map(f => (
+                              <div key={f.key}>
+                                <p style={{ margin: '0 0 4px 0', color: '#FFC300', fontWeight: '700', fontSize: '11px', letterSpacing: '0.5px' }}>{f.label}</p>
+                                <p style={{ margin: 0, color: isDark ? '#e2e8f0' : '#1a202c', fontSize: '14px', wordBreak: 'break-word' }}>{f.val || '-'}</p>
+                              </div>
+                            ))}
                           </div>
                         </td>
                       </tr>
                     )}
-                  </tbody>
+                  </Fragment>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>No hay registros</td>
+                  <td colSpan={colCount} style={{ padding: '24px', textAlign: 'center', color: isDark ? '#94a3b8' : '#64748b' }}>No hay registros</td>
                 </tr>
               )}
             </tbody>
@@ -338,5 +372,26 @@ export default function Dashboard({ isDark, onLogout }) {
         </div>
       </div>
     </div>
+  )
+}
+
+function ReferralBadge({ count }) {
+  const n = count ?? 0
+  const active = n > 0
+  return (
+    <span style={{
+      display: 'inline-block',
+      minWidth: '28px',
+      padding: '3px 10px',
+      borderRadius: '999px',
+      fontWeight: '800',
+      fontSize: '13px',
+      color: active ? '#1a1a1a' : '#94a3b8',
+      background: active
+        ? 'linear-gradient(135deg, #FFC300 0%, #FFB700 100%)'
+        : 'rgba(148, 163, 184, 0.15)',
+    }}>
+      {n}
+    </span>
   )
 }

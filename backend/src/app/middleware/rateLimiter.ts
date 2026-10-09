@@ -15,3 +15,11 @@ export const excelLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+export const referralStatsLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  message: 'Demasiadas consultas desde esta IP, intenta más tarde.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});

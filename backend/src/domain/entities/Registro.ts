@@ -1,9 +1,8 @@
 export interface Registro {
-  id?: number;
+  id?: string;
   fullName: string;
   countryCode: string;
   phone: string;
-  identificationType: string;
   identificationNumber: string;
   email: string;
   address: string;
@@ -12,6 +11,7 @@ export interface Registro {
   department: string;
   municipality: string;
   gender: 'Male' | 'Female';
+  populationType: string;
   acceptedTerms: boolean;
   referredById?: string;
   createdAt?: Date;

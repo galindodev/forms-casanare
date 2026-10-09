@@ -14,9 +14,6 @@ export class CreateRegistroDTO {
   phone!: string;
 
   @IsString()
-  identificationType!: string;
-
-  @IsString()
   @MinLength(5)
   identificationNumber!: string;
 
@@ -41,6 +38,9 @@ export class CreateRegistroDTO {
 
   @IsEnum(['Male', 'Female'])
   gender!: 'Male' | 'Female';
+
+  @IsString()
+  populationType!: string;
 
   @IsBoolean()
   acceptedTerms!: boolean;

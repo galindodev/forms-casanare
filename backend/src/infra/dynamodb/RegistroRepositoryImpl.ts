@@ -7,7 +7,7 @@ import { getDocClient } from './connection';
 const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || 'registrations';
 
 export class RegistroRepositoryImpl implements IRegistroRepository {
-  async save(registro: Registro): Promise<number> {
+  async save(registro: Registro): Promise<string> {
     const docClient = getDocClient();
     const id = uuidv4();
 
@@ -18,22 +18,60 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
       createdAt: new Date().toISOString(),
     };
 
-    try {
-      await docClient.send(
-        new PutCommand({
-          TableName: TABLE_NAME,
-          Item: item,
-          ConditionExpression:
-            'attribute_not_exists(email) AND attribute_not_exists(identificationNumber)',
-        })
-      );
-      return parseInt(id.split('-')[0], 16);
-    } catch (error: any) {
-      if (error.name === 'ConditionalCheckFailedException') {
-        throw new Error('Email or identification number already registered');
-      }
-      throw error;
-    }
+    await docClient.send(
+      new PutCommand({
+        TableName: TABLE_NAME,
+        Item: item,
+      })
+    );
+    return id;
+  }
+
+  private mapItem(item: any): Registro {
+    return {
+      id: item.id,
+      fullName: item.fullName,
+      countryCode: item.countryCode,
+      phone: item.phone,
+      identificationNumber: item.identificationNumber,
+      email: item.email,
+      address: item.address,
+      neighborhood: item.neighborhood,
+      ageGroup: item.ageGroup,
+      department: item.department,
+      municipality: item.municipality,
+      gender: item.gender,
+      populationType: item.populationType,
+      acceptedTerms: item.acceptedTerms === 1,
+      referredById: item.referredById,
+      createdAt: item.createdAt ? new Date(item.createdAt) : undefined,
+    };
+  }
+
+  async findByIdentificationNumber(identificationNumber: string): Promise<Registro | null> {
+    const docClient = getDocClient();
+    const result = await docClient.send(
+      new ScanCommand({
+        TableName: TABLE_NAME,
+        FilterExpression: 'identificationNumber = :id',
+        ExpressionAttributeValues: { ':id': String(identificationNumber) },
+      })
+    );
+    const item = (result.Items || [])[0];
+    return item ? this.mapItem(item) : null;
+  }
+
+  async findByEmail(email: string): Promise<Registro | null> {
+    const docClient = getDocClient();
+    const result = await docClient.send(
+      new ScanCommand({
+        TableName: TABLE_NAME,
+        FilterExpression: 'email = :email',
+        ExpressionAttributeValues: { ':email': String(email) },
+      })
+    );
+    const item = (result.Items || [])[0];
+    return item ? this.mapItem(item) : null;
   }
 
   async findAll(): Promise<Registro[]> {
@@ -46,24 +84,7 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
         })
       );
 
-      return (result.Items || []).map((item: any) => ({
-        id: item.id,
-        fullName: item.fullName,
-        countryCode: item.countryCode,
-        phone: item.phone,
-        identificationType: item.identificationType,
-        identificationNumber: item.identificationNumber,
-        email: item.email,
-        address: item.address,
-        neighborhood: item.neighborhood,
-        ageGroup: item.ageGroup,
-        department: item.department,
-        municipality: item.municipality,
-        gender: item.gender,
-        acceptedTerms: item.acceptedTerms === 1,
-        referredById: item.referredById,
-        createdAt: item.createdAt ? new Date(item.createdAt) : undefined,
-      }));
+      return (result.Items || []).map((item: any) => this.mapItem(item));
     } catch (error) {
       throw error;
     }
