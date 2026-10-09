@@ -590,6 +590,7 @@ export default function RegisterForm({ isDark }) {
               <option value="Indígena">Indígena</option>
               <option value="NARP (Negro, Afrodescendiente, Raizal y Palenquero)">NARP (Negro, Afrodescendiente, Raizal y Palenquero)</option>
               <option value="Gitano (Rrom)">Gitano (Rrom)</option>
+              <option value="Otro">Otro</option>
               <option value="Ninguno">Ninguno</option>
             </select>
             {errors.ethnicFocus && touched.ethnicFocus && (
