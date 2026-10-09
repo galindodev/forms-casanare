@@ -543,10 +543,25 @@ export default function RegisterForm({ isDark }) {
               }}
             >
               <option value="">Seleccionar...</option>
-              <option value="Empresario">Empresario</option>
-              <option value="Población víctima del conflicto">Población víctima del conflicto</option>
-              <option value="Indígena">Indígena</option>
-              <option value="Ninguna de las anteriores">Ninguna de las anteriores</option>
+              <option value="Agricultor(a) o productor(a) rural">Agricultor(a) o productor(a) rural</option>
+              <option value="Artesano(a)">Artesano(a)</option>
+              <option value="Buscador(a) de empleo">Buscador(a) de empleo</option>
+              <option value="Comerciante">Comerciante</option>
+              <option value="Desempleado(a)">Desempleado(a)</option>
+              <option value="Docente o formador(a)">Docente o formador(a)</option>
+              <option value="Empresario(a) o emprendedor(a)">Empresario(a) o emprendedor(a)</option>
+              <option value="Estudiante">Estudiante</option>
+              <option value="Ganadero(a)">Ganadero(a)</option>
+              <option value="Pensionado(a)">Pensionado(a)</option>
+              <option value="Persona dedicada a labores del hogar no remuneradas">Persona dedicada a labores del hogar no remuneradas</option>
+              <option value="Pescador(a)">Pescador(a)</option>
+              <option value="Reciclador(a) de oficio">Reciclador(a) de oficio</option>
+              <option value="Trabajador(a) formal">Trabajador(a) formal</option>
+              <option value="Trabajador(a) independiente">Trabajador(a) independiente</option>
+              <option value="Trabajador(a) informal">Trabajador(a) informal</option>
+              <option value="Vendedor(a) ambulante">Vendedor(a) ambulante</option>
+              <option value="Veterano de la Fuerza Pública">Veterano de la Fuerza Pública</option>
+              <option value="Otra ocupación">Otra ocupación</option>
             </select>
             {errors.populationType && touched.populationType && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ef4444', fontSize: '12px', marginTop: '6px', fontWeight: '500' }}>
