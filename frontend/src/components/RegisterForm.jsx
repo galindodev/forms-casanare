@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { FiUser, FiMail, FiPhone, FiMapPin, FiAlertCircle, FiCheckCircle, FiX, FiCopy, FiCheck, FiDownload, FiSearch, FiUsers } from 'react-icons/fi'
+import { FiUser, FiMail, FiPhone, FiMapPin, FiAlertCircle, FiCheckCircle, FiCopy, FiCheck, FiDownload, FiSearch, FiUsers } from 'react-icons/fi'
 import { QRCodeCanvas } from 'qrcode.react'
 import ReferralSection from './ReferralSection'
 
@@ -18,6 +18,7 @@ export default function RegisterForm({ isDark }) {
     ageGroup: '',
     gender: '',
     populationType: '',
+    ethnicFocus: '',
     acceptedTerms: false,
     referredById: '',
   })
@@ -155,7 +156,7 @@ export default function RegisterForm({ isDark }) {
 
   const validateField = (name, value) => {
     let error = ''
-    const requiredFields = ['fullName', 'phone', 'identificationNumber', 'email', 'address', 'neighborhood', 'municipality', 'ageGroup', 'gender', 'populationType']
+    const requiredFields = ['fullName', 'phone', 'identificationNumber', 'email', 'address', 'neighborhood', 'municipality', 'ageGroup', 'gender', 'populationType', 'ethnicFocus']
     if (!value && requiredFields.includes(name)) {
       error = 'Campo requerido'
     }
@@ -188,6 +189,7 @@ export default function RegisterForm({ isDark }) {
     identificationNumber: 'Número de documento', email: 'Email', address: 'Dirección',
     neighborhood: 'Barrio o Vereda', municipality: 'Municipio', ageGroup: 'Edad', gender: 'Género',
     populationType: 'Tipo de población',
+    ethnicFocus: 'Enfoque poblacional',
   }
 
   const handleSubmit = async (e) => {
@@ -236,7 +238,7 @@ export default function RegisterForm({ isDark }) {
         setFormData({
           fullName: '', countryCode: '+57', phone: '',
           identificationNumber: '', email: '', address: '', neighborhood: '', municipality: '',
-          ageGroup: '', gender: '', populationType: '', acceptedTerms: false, referredById: '',
+          ageGroup: '', gender: '', populationType: '', ethnicFocus: '', acceptedTerms: false, referredById: '',
         })
       } else {
         const error = await response.json()
@@ -566,6 +568,33 @@ export default function RegisterForm({ isDark }) {
             {errors.populationType && touched.populationType && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ef4444', fontSize: '12px', marginTop: '6px', fontWeight: '500' }}>
                 <FiAlertCircle size={14} /> {errors.populationType}
+              </div>
+            )}
+          </div>
+
+          {/* Ethnic focus */}
+          <div>
+            <label style={labelStyle}>Enfoque poblacional<span style={{ color: '#ef4444' }}> *</span></label>
+            <select
+              name="ethnicFocus"
+              value={formData.ethnicFocus}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              style={{
+                ...inputStyle, appearance: 'none', cursor: 'pointer',
+                backgroundColor: errors.ethnicFocus && touched.ethnicFocus ? (isDark ? '#7f1d1d' : '#fee2e2') : inputStyle.backgroundColor,
+                borderLeft: errors.ethnicFocus && touched.ethnicFocus ? '4px solid #ef4444' : 'none',
+              }}
+            >
+              <option value="">Seleccionar...</option>
+              <option value="Indígena">Indígena</option>
+              <option value="NARP (Negro, Afrodescendiente, Raizal y Palenquero)">NARP (Negro, Afrodescendiente, Raizal y Palenquero)</option>
+              <option value="Gitano (Rrom)">Gitano (Rrom)</option>
+              <option value="Ninguno">Ninguno</option>
+            </select>
+            {errors.ethnicFocus && touched.ethnicFocus && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ef4444', fontSize: '12px', marginTop: '6px', fontWeight: '500' }}>
+                <FiAlertCircle size={14} /> {errors.ethnicFocus}
               </div>
             )}
           </div>

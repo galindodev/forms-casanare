@@ -42,6 +42,7 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
       municipality: item.municipality,
       gender: item.gender,
       populationType: item.populationType,
+      ethnicFocus: item.ethnicFocus,
       acceptedTerms: item.acceptedTerms === 1,
       referredById: item.referredById,
       createdAt: item.createdAt ? new Date(item.createdAt) : undefined,

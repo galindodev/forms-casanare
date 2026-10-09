@@ -42,6 +42,9 @@ export class CreateRegistroDTO {
   @IsString()
   populationType!: string;
 
+  @IsString()
+  ethnicFocus!: string;
+
   @IsBoolean()
   acceptedTerms!: boolean;
 

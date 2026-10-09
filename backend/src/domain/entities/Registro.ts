@@ -12,6 +12,7 @@ export interface Registro {
   municipality: string;
   gender: 'Male' | 'Female';
   populationType: string;
+  ethnicFocus: string;
   acceptedTerms: boolean;
   referredById?: string;
   createdAt?: Date;

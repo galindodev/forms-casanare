@@ -348,6 +348,7 @@ export default function Dashboard({ isDark, onLogout }) {
                               { key: 'ageGroup', label: 'EDAD', val: reg.ageGroup },
                               { key: 'gender', label: 'GÉNERO', val: reg.gender === 'Male' ? 'Hombre' : reg.gender === 'Female' ? 'Mujer' : reg.gender },
                               { key: 'populationType', label: 'TIPO DE POBLACIÓN', val: reg.populationType },
+                              { key: 'ethnicFocus', label: 'ENFOQUE POBLACIONAL', val: reg.ethnicFocus },
                               { key: 'referralCount', label: 'REFERIDOS', val: String(reg.referralCount ?? 0) },
                               { key: 'createdAt', label: 'FECHA', val: reg.createdAt ? new Date(reg.createdAt).toLocaleString('es-CO') : '-' },
                             ].filter(f => !visibleKeys.has(f.key)).map(f => (
