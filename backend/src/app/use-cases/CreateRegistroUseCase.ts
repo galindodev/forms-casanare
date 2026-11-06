@@ -17,9 +17,11 @@ export class CreateRegistroUseCase {
       throw new Error('Ya existe un registro con esta cédula');
     }
 
-    const existingByEmail = await this.repository.findByEmail(data.email);
-    if (existingByEmail) {
-      throw new Error('Ya existe un registro con este correo electrónico');
+    if (data.email && data.email.trim().length > 0) {
+      const existingByEmail = await this.repository.findByEmail(data.email.trim());
+      if (existingByEmail) {
+        throw new Error('Ya existe un registro con este correo electrónico');
+      }
     }
 
     try {
@@ -46,9 +48,6 @@ export class CreateRegistroUseCase {
     }
     if (!data.phone || data.phone.trim().length === 0) {
       throw new Error('Phone required');
-    }
-    if (!data.email || data.email.trim().length === 0) {
-      throw new Error('Email required');
     }
     if (!data.identificationNumber || data.identificationNumber.trim().length === 0) {
       throw new Error('Identification number required');

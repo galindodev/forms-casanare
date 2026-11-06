@@ -11,12 +11,17 @@ export class RegistroRepositoryImpl implements IRegistroRepository {
     const docClient = getDocClient();
     const id = uuidv4();
 
-    const item = {
+    const item: Record<string, any> = {
       id,
       ...registro,
       acceptedTerms: registro.acceptedTerms ? 1 : 0,
       createdAt: new Date().toISOString(),
     };
+
+    // GSI email-index rejects empty string key. Omit email attr when blank.
+    if (!item.email || String(item.email).trim().length === 0) {
+      delete item.email;
+    }
 
     await docClient.send(
       new PutCommand({

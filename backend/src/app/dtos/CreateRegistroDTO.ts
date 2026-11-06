@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsEnum, IsBoolean, IsNumberString, IsOptional, MinLength, Matches } from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsBoolean, IsNumberString, IsOptional, MinLength, Matches, ValidateIf } from 'class-validator';
 
 export class CreateRegistroDTO {
   @IsString()
@@ -17,8 +17,9 @@ export class CreateRegistroDTO {
   @MinLength(5)
   identificationNumber!: string;
 
+  @ValidateIf((o) => o.email !== undefined && o.email !== null && o.email !== '')
   @IsEmail()
-  email!: string;
+  email?: string;
 
   @IsString()
   address!: string;

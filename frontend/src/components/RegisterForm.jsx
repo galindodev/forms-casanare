@@ -156,7 +156,7 @@ export default function RegisterForm({ isDark }) {
 
   const validateField = (name, value) => {
     let error = ''
-    const requiredFields = ['fullName', 'phone', 'identificationNumber', 'email', 'address', 'neighborhood', 'municipality', 'ageGroup', 'gender', 'populationType', 'ethnicFocus']
+    const requiredFields = ['fullName', 'phone', 'identificationNumber', 'address', 'neighborhood', 'municipality', 'ageGroup', 'gender', 'populationType', 'ethnicFocus']
     if (!value && requiredFields.includes(name)) {
       error = 'Campo requerido'
     }
@@ -351,8 +351,7 @@ export default function RegisterForm({ isDark }) {
             />
             <InputField
               icon={FiMail}
-              label="Email"
-              required
+              label="Email (opcional)"
               name="email"
               type="email"
               placeholder="tu@email.com"
@@ -790,10 +789,10 @@ export default function RegisterForm({ isDark }) {
             color: isDark ? '#e2e8f0' : '#1a202c',
             margin: '0 0 8px 0',
           }}>
-            <FiUsers size={20} color="#FFC300" /> Consulta tus referidos
+            <FiUsers size={20} color="#FFC300" /> Consulte aquí su información, código QR y referidos
           </h3>
           <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: isDark ? '#94a3b8' : '#64748b' }}>
-            Ingresa tu número de cédula para ver cuántas personas has referido.
+            Ingrese su número de cédula para consultar su información, descargar su código QR y ver cuántas personas ha referido.
           </p>
 
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
