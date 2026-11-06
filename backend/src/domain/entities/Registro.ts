@@ -4,7 +4,7 @@ export interface Registro {
   countryCode: string;
   phone: string;
   identificationNumber: string;
-  email: string;
+  email?: string;
   address: string;
   neighborhood: string;
   ageGroup: string;

@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react'
-import { FiDownload, FiEye, FiEyeOff, FiLogOut } from 'react-icons/fi'
+import { FiEye, FiEyeOff, FiLogOut } from 'react-icons/fi'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -50,21 +50,6 @@ export default function Dashboard({ isDark, onLogout }) {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5)
     setTopReferrers(sorted)
-  }
-
-  const downloadExcel = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/registrations/excel`)
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `registrations_${new Date().toISOString().split('T')[0]}.xlsx`
-      a.click()
-      window.URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error('Error downloading Excel:', error)
-    }
   }
 
   const filteredRegistrations = registrations.filter(reg =>
@@ -201,48 +186,6 @@ export default function Dashboard({ isDark, onLogout }) {
             ) : (
               <p style={{ color: isDark ? '#94a3b8' : '#64748b', margin: 0 }}>Sin referidos aún</p>
             )}
-          </div>
-
-          {/* Export */}
-          <div style={{
-            background: isDark ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-            padding: '24px',
-            borderRadius: '12px',
-            border: `2px solid ${isDark ? 'rgba(255, 195, 0, 0.2)' : 'rgba(0, 48, 135, 0.2)'}`,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '16px'
-          }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFC300', margin: 0 }}>Exportar Datos</h3>
-            <button
-              onClick={downloadExcel}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                background: 'linear-gradient(135deg, #FFC300 0%, #FFB700 100%)',
-                color: '#1a1a1a',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontWeight: '700',
-                transition: 'all 0.3s',
-                boxShadow: '0 4px 12px rgba(255, 195, 0, 0.3)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'scale(1.05)'
-                e.target.style.boxShadow = '0 6px 16px rgba(255, 195, 0, 0.4)'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'scale(1)'
-                e.target.style.boxShadow = '0 4px 12px rgba(255, 195, 0, 0.3)'
-              }}
-            >
-              <FiDownload size={18} /> Descargar Excel
-            </button>
           </div>
         </div>
 
