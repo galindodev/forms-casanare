@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment } from 'react'
-import { FiEye, FiEyeOff, FiLogOut } from 'react-icons/fi'
+import { FiEye, FiEyeOff, FiLogOut, FiDownload } from 'react-icons/fi'
+import * as XLSX from 'xlsx'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -52,6 +53,39 @@ export default function Dashboard({ isDark, onLogout }) {
     setTopReferrers(sorted)
   }
 
+  const exportToExcel = () => {
+    const rows = filteredRegistrations.map((reg, i) => ({
+      '#': i + 1,
+      'Nombre': reg.fullName || '',
+      'Documento': reg.identificationNumber || '',
+      'Email': reg.email || '',
+      'Teléfono': `${reg.countryCode || ''} ${reg.phone || ''}`.trim(),
+      'Dirección': reg.address || '',
+      'Barrio / Vereda': reg.neighborhood || '',
+      'Municipio': reg.municipality || '',
+      'Departamento': reg.department || '',
+      'Edad': reg.ageGroup || '',
+      'Género': reg.gender === 'Male' ? 'Hombre' : reg.gender === 'Female' ? 'Mujer' : (reg.gender || ''),
+      'Tipo de Población': reg.populationType || '',
+      'Enfoque Poblacional': reg.ethnicFocus || '',
+      'Referidos': reg.referralCount ?? 0,
+      'Referido Por': reg.referredByName || reg.referredById || '',
+      'Fecha': reg.createdAt ? new Date(reg.createdAt).toLocaleString('es-CO') : '',
+    }))
+
+    const ws = XLSX.utils.json_to_sheet(rows)
+    // Column widths
+    ws['!cols'] = [
+      { wch: 5 }, { wch: 26 }, { wch: 16 }, { wch: 28 }, { wch: 16 },
+      { wch: 24 }, { wch: 20 }, { wch: 18 }, { wch: 16 }, { wch: 12 },
+      { wch: 10 }, { wch: 20 }, { wch: 20 }, { wch: 10 }, { wch: 22 }, { wch: 22 },
+    ]
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Registrados')
+    const today = new Date().toISOString().slice(0, 10)
+    XLSX.writeFile(wb, `registrados_casanare_${today}.xlsx`)
+  }
+
   const filteredRegistrations = registrations.filter(reg =>
     reg.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     reg.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,33 +130,66 @@ export default function Dashboard({ isDark, onLogout }) {
           }}>
             Dashboard Registrados
           </h1>
-          <button
-            onClick={onLogout}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-              color: '#fff',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: '700',
-              transition: 'all 0.3s',
-              boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'scale(1.05)'
-              e.target.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'scale(1)'
-              e.target.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)'
-            }}
-          >
-            <FiLogOut size={18} /> Salir
-          </button>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              onClick={exportToExcel}
+              disabled={loading || filteredRegistrations.length === 0}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: (loading || filteredRegistrations.length === 0)
+                  ? 'rgba(148, 163, 184, 0.4)'
+                  : 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                cursor: (loading || filteredRegistrations.length === 0) ? 'not-allowed' : 'pointer',
+                fontWeight: '700',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 12px rgba(22, 163, 74, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                if (loading || filteredRegistrations.length === 0) return
+                e.currentTarget.style.transform = 'scale(1.05)'
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(22, 163, 74, 0.4)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(22, 163, 74, 0.3)'
+              }}
+            >
+              <FiDownload size={18} /> Descargar Excel
+            </button>
+            <button
+              onClick={onLogout}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '700',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)'
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)'
+              }}
+            >
+              <FiLogOut size={18} /> Salir
+            </button>
+          </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '40px' }}>
